@@ -2,7 +2,11 @@ require('dotenv').config(); // Carga variables de entorno al inicio
 const express = require('express');
 const app = express();
 const cors = require('cors');
-app.use(cors());
+app.use(cors(
+  origin: allowedOrigins,
+  methods: 'get, post, put, delete, patch',
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type,Accept, Authorization'
+));
 const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
 
