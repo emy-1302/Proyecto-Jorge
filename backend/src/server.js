@@ -2,11 +2,16 @@ require('dotenv').config(); // Carga variables de entorno al inicio
 const express = require('express');
 const app = express();
 const cors = require('cors');
-app.use(cors(
+
+// Define los orígenes permitidos (ajusta según tus necesidades)
+const allowedOrigins = ['http://localhost:3000', 'http://Proyecto-jorge.onrender.com'];
+
+app.use(cors({
   origin: allowedOrigins,
-  methods: 'get, post, put, delete, patch',
-  allowedHeaders: 'Origin, X-Requested-With, Content-Type,Accept, Authorization'
-));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+}));
+
 const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
 
