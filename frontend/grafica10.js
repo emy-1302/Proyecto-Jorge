@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'http://127.0.0.1:3000/api/materialesActividad', // Cambia la URL si tu backend usa otra
+        url: 'https://proyectoe4servicios.onrender.com/api/materialesActividad', // Cambia la URL si tu backend usa otra
         method: 'GET',
         dataType: 'json',
         success: function (data) {
@@ -8,15 +8,8 @@ $(document).ready(function () {
             renderChart(data.labels, data.datasets);
         },
         error: function () {
-            // Datos de ejemplo si falla la petición
-            renderChart(
-                ['Actividad 1', 'Actividad 2', 'Actividad 3'],
-                [
-                    { label: 'Cemento', data: [12, 8, 10], backgroundColor: '#7986cb' },
-                    { label: 'Arena', data: [6, 10, 4], backgroundColor: '#9fa8da' },
-                    { label: 'Tubos', data: [5, 6, 7], backgroundColor: '#c5cae9' }
-                ]
-            );
+            // Mostrar mensaje de error si falla la petición
+            $('#grafico10').replaceWith('<div style="color:red; font-weight:bold;">Hubo un error al cargar los datos.</div>');
         }
     });
 
