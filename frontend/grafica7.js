@@ -1,23 +1,18 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'http://127.0.0.1:3000/api/detallesProyecto',
+        url: 'https://proyectoe4servicios.onrender.com/api/detallesProyecto',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
             renderChart(data.labels, data.ciudades, data.estados, data.paises);
         },
         error: function () {
-            renderChart(
-                ['Proyecto A', 'Proyecto B'],
-                ['Ciudad 1', 'Ciudad 2'],
-                ['Estado 1', 'Estado 2'],
-                ['México', 'México']
-            );
+            $('#grafico7').replaceWith('<div style="color: red; font-weight: bold;">Hubo un error al cargar los datos.</div>');
         }
     });
 
     function renderChart(labels, ciudades, estados, paises) {
-        // Asigna un color diferente por ciudad
+        
         const colorMap = {};
         const palette = ['#7986cb', '#ba68c8', '#4dd0e1', '#ffd54f', '#81c784', '#ff8a65', '#a1887f', '#90a4ae', '#f06292', '#9575cd'];
         let colorIdx = 0;
@@ -37,7 +32,7 @@ $(document).ready(function () {
                 labels: labels,
                 datasets: [{
                     label: 'Proyectos por ciudad',
-                    data: labels.map(() => 1), // Solo para mostrar una barra por proyecto
+                    data: labels.map(() => 1), 
                     backgroundColor: backgroundColors
                 }]
             },

@@ -1,17 +1,13 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'http://127.0.0.1:3000/api/informesProyecto', // Cambia la URL si tu backend usa otra
+        url: 'https://proyectoe4servicios.onrender.com/api/informesProyecto',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
             renderChart(data.labels, data.values);
         },
         error: function () {
-            // Datos de ejemplo si falla la petición
-            renderChart(
-                ['Proyecto A', 'Proyecto B', 'Proyecto C', 'Proyecto D'],
-                [12, 8, 15, 10]
-            );
+            $('#grafico8').replaceWith('<div style="color: red; font-weight: bold;">Hubo un error al cargar los datos.</div>');
         }
     });
 
