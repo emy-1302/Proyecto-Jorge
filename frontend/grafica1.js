@@ -15,14 +15,7 @@ $(document).ready(function () {
             }]);
         },
         error: function () {
-            renderChart(
-                ['Proyecto A', 'Proyecto B'],
-                [{
-                    label: 'Árboles registrados',
-                    data: [10, 5],
-                    backgroundColor: ['#7986cb', '#9fa8da']
-                }]
-            );
+            $('#grafico1').replaceWith('<div style="color: red; font-weight: bold;">Hubo un error al cargar los datos.</div>');
         }
     });
 
