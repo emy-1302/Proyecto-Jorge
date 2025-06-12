@@ -7,7 +7,7 @@ $(document).ready(function () {
             renderChart(Number(data.capacidad));
         },
         error: function () {
-            renderChart(0);
+            $('#grafico4').replaceWith('<div style="color: red; font-weight: bold;">Hubo un error al cargar los datos.</div>');
         }
     });
 
