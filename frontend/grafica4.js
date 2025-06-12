@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'https://proyectoe4.onrender.com/api/capacidadTotalRiego',
+        url: 'https://proyectoe4servicios.onrender.com/api/capacidadTotalRiego',
         method: 'GET',
         dataType: 'json',
         success: function (data) {

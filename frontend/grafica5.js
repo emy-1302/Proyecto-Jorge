@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'https://proyectoe4servicios.onrender.com/api/informesEmpleado', // Cambia la URL si tu backend usa otra
+        url: 'https://proyectoe4servicios.onrender.com/api/informesEmpleado',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
