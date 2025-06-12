@@ -1,17 +1,13 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'http://127.0.0.1:3000/api/actividadesEmpleado', // Cambia la URL si tu backend usa otra
+        url: 'https://proyectoe4servicios.onrender.com/api/actividadesEmpleado', // Cambia la URL si tu backend usa otra
         method: 'GET',
         dataType: 'json',
         success: function (data) {
             renderChart(data.labels, data.values);
         },
         error: function () {
-            // Datos de ejemplo si falla la petición
-            renderChart(
-                ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
-                [5, 8, 6, 10, 7, 9]
-            );
+            $('#grafico6').replaceWith('<div style="color: red; font-weight: bold;">Hubo un error al cargar los datos.</div>');
         }
     });
 
