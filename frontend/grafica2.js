@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'http://127.0.0.1:3000/api/contarArboles',
+        url: 'https:/proyectoe4servicios.onrender.com/api/contarArboles',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
