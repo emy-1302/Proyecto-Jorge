@@ -7,7 +7,7 @@ $(document).ready(function () {
             renderChart(data.total);
         },
         error: function () {
-            renderChart(0);
+            $('#grafico2').replaceWith('<div style="color: red; font-weight: bold;">Hubo un error al cargar los datos.</div>');
         }
     });
 
