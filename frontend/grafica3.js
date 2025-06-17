@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'https:/proyectoe4servicios.onrender.com/api/alturaPromedio',
+        url: 'https://proyectoe4servicios.onrender.com/api/alturaPromedio',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
