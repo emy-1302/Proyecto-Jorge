@@ -7,12 +7,14 @@ exports.arbolesPorProyecto = async (req, res) => {
     // Si tu procedure no agrupa, hazlo aquí:
     // Suponiendo que rows[0] tiene campos: proyecto_idProyecto
     const conteo = {};
+    console.log(row[0]);
     rows[0].forEach(row => {
       const key = row.proyecto_idProyecto || row.proyecto || row.idProyecto || 'Sin Proyecto';
       conteo[key] = (conteo[key] || 0) + 1;
     });
     const labels = Object.keys(conteo);
     const values = Object.values(conteo);
+    
     res.json({ labels, values });
   } catch (err) {
     console.error(err);
