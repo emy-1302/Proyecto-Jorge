@@ -1,55 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Proyecto paec</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Proyecto PAEC - Programa de Monitoreo</title>
+  <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Proyecto paec</h1>
-        <div class="questions-list">
-            <div class="question-row">
-                <span class="question">1. ¿Cuántos árboles se han registrado en cada proyecto?</span>
-                <button onclick="window.location.href='grafica1.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">2. ¿Cuál es el total de árboles plantados por proyecto?</span>
-                <button onclick="window.location.href='grafica2.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">3. ¿Cuál es la altura promedio de los árboles plantados?</span>
-                <button onclick="window.location.href='grafica3.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">4. ¿Cuál es la capacidad total de riego de todos los sistemas instalados?</span>
-                <button onclick="window.location.href='grafica4.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">5. ¿Qué informes ha realizado cada empleado?</span>
-                <button onclick="window.location.href='grafica5.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">6. ¿Qué actividades ha realizado un empleado en específico?</span>
-                <button onclick="window.location.href='grafica6.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">7. ¿Cuáles son los detalles técnicos y generales de cada proyecto?</span>
-                <button onclick="window.location.href='grafica7.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">8. ¿Qué informes han sido generados para cada proyecto?</span>
-                <button onclick="window.location.href='grafica8.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">9. ¿Qué equipos han sido asignados a cada proyecto?</span>
-                <button onclick="window.location.href='grafica9.html'">Ver gráfica</button>
-            </div>
-            <div class="question-row">
-                <span class="question">10. ¿Qué materiales se han utilizado en cada actividad registrada?</span>
-                <button onclick="window.location.href='grafica10.html'">Ver gráfica</button>
-            </div>
-        </div>
-    </div>
+  <div class="wrapper" role="main">
+    <svg class="icon-tree" viewBox="0 0 64 64" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 2c-2.8 0-5 2.2-5 5 0 .9.3 1.8.9 2.5C25.3 10.7 23 14.1 23 18c0 1.7.7 3.3 1.8 4.5l-7.5 3c-1 .4-1.3 1.7-.6 2.5l3 4c-2.6.4-4.6 2.6-4.6 5.3 0 2.9 2.4 5.3 5.3 5.3h14.8c2.9 0 5.3-2.4 5.3-5.3 0-2.7-2-4.9-4.6-5.3l3-4c.7-.8.4-2.1-.6-2.5l-7.5-3c1.1-1.2 1.8-2.8 1.8-4.5 0-3.9-2.3-7.3-4.9-8.5.6-.7.9-1.6.9-2.5 0-2.8-2.2-5-5-5z"/>
+    </svg>
+    <h1>Proyecto PAEC - Programa de Monitoreo</h1>
+    <p class="subtitle">Protegiendo el futuro, un árbol a la vez</p>
+    <button class="btn-start" onclick="location.href='home.html'">Iniciar Monitoreo</button>
+  </div>
 </body>
 </html>
