@@ -4,19 +4,24 @@ $(document).ready(function () {
         method: 'GET',
         dataType: 'json',
         success: function (data) {
-            // Agrupar por proyecto_idProyecto y contar
+            // Agrupar y contar árboles por proyecto
             const conteo = {};
             data.forEach(arbol => {
                 const key = arbol.proyecto_idProyecto || 'Sin Proyecto';
                 conteo[key] = (conteo[key] || 0) + 1;
             });
-            const labels = Object.keys(conteo);
+
+            // Convertir a arrays para la gráfica
+            const labels = Object.keys(conteo).map(id => `Proyecto ${id}`);
             const values = Object.values(conteo);
 
             renderChart(labels, [{
-                label: 'Árboles registrados',
+                label: 'Árboles por proyecto',
                 data: values,
-                backgroundColor: ['#7986cb', '#9fa8da', '#c5cae9', '#d1c4e9', '#b2dfdb', '#b39ddb', '#ffe082', '#ffab91', '#80cbc4', '#a5d6a7'],
+                backgroundColor: [
+                    '#7986cb', '#9fa8da', '#c5cae9', '#d1c4e9', '#b2dfdb',
+                    '#b39ddb', '#ffe082', '#ffab91', '#80cbc4', '#a5d6a7'
+                ],
                 borderColor: '#3f51b5',
                 borderWidth: 1,
                 borderRadius: 8,
@@ -52,12 +57,10 @@ $(document).ready(function () {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { color: '#00086d' },
-                        grid: { color: '#e8eaf6' }
-                    },
-                    x: {
-                        ticks: { color: '#00086d' },
-                        grid: { color: '#ede7f6' }
+                        title: {
+                            display: true,
+                            text: 'Cantidad de árboles'
+                        }
                     }
                 }
             }

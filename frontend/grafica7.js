@@ -4,66 +4,54 @@ $(document).ready(function () {
         method: 'GET',
         dataType: 'json',
         success: function (data) {
-            renderChart(data.labels, data.ciudades, data.estados, data.paises);
+            // Calcular días activos de cada proyecto
+            const labels = data.map(proy => proy.nombre);
+            const hoy = new Date();
+            const values = data.map(proy => {
+                const inicio = new Date(proy.fechaInicio);
+                return ((hoy - inicio) / (1000 * 60 * 60 * 24)).toFixed(2); // días
+            });
+
+            // Calcular promedio de días activos
+            const promedio = values.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / values.length;
+
+            renderChart(labels, [{
+                label: 'Días activos por proyecto',
+                data: values,
+                backgroundColor: '#b39ddb'
+            }]);
+
+            // Mostrar el promedio debajo de la gráfica
+            $('#mensaje-promedio-proyecto').remove();
+            $('#grafico7').after(`<div id="mensaje-promedio-proyecto" style="margin-top:10px;font-weight:bold;color:#5c6bc0;">Promedio de días activos: ${promedio.toFixed(2)} días</div>`);
         },
-        error: function () {
-            $('#grafico7').replaceWith('<div style="color: red; font-weight: bold;">Hubo un error al cargar los datos.</div>');
+        error: function (xhr) {
+            let mensaje = 'Hubo un error al cargar los datos.';
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                mensaje = `<b>Error:</b> ${xhr.responseJSON.error}<br><b>Detalle:</b> ${xhr.responseJSON.detalle || ''}`;
+            }
+            $('#grafico7').replaceWith(`<div style="color: red; font-weight: bold;">${mensaje}</div>`);
         }
     });
 
-    function renderChart(labels, ciudades, estados, paises) {
-        
-        const colorMap = {};
-        const palette = ['#7986cb', '#ba68c8', '#4dd0e1', '#ffd54f', '#81c784', '#ff8a65', '#a1887f', '#90a4ae', '#f06292', '#9575cd'];
-        let colorIdx = 0;
-        ciudades.forEach(ciudad => {
-            if (!colorMap[ciudad]) {
-                colorMap[ciudad] = palette[colorIdx % palette.length];
-                colorIdx++;
-            }
-        });
-
-        const backgroundColors = ciudades.map(ciudad => colorMap[ciudad]);
-
+    function renderChart(labels, datasets) {
         const ctx = document.getElementById('grafico7').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Proyectos por ciudad',
-                    data: labels.map(() => 1), 
-                    backgroundColor: backgroundColors
-                }]
-            },
+            data: { labels, datasets },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            title: function(context) {
-                                return labels[context[0].dataIndex];
-                            },
-                            label: function(context) {
-                                const idx = context.dataIndex;
-                                return [
-                                    `Ciudad: ${ciudades[idx]}`,
-                                    `Estado: ${estados[idx]}`,
-                                    `País: ${paises[idx]}`
-                                ];
-                            }
-                        }
-                    }
+                    legend: { display: true }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { stepSize: 1 },
-                        title: { display: false }
-                    },
-                    x: {
-                        ticks: { color: '#00086d', font: { size: 12 } }
+                        title: {
+                            display: true,
+                            text: 'Días activos'
+                        }
                     }
                 }
             }

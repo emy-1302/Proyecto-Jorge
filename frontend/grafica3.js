@@ -1,48 +1,52 @@
 $(document).ready(function () {
     $.ajax({
-        url: 'https://proyectoe4servicios.onrender.com/api/alturaPromedio',
+        url: 'https://proyectoe4servicios.onrender.com/api/arbolesPorProyecto',
         method: 'GET',
         dataType: 'json',
         success: function (data) {
-            renderChart(Number(data.altura));
+            // Extraer especies y alturas
+            const labels = data.map(arbol => arbol.especie);
+            const values = data.map(arbol => Number(arbol.altura));
+            // Calcular promedio
+            const promedio = values.reduce((a, b) => a + b, 0) / values.length;
+
+            renderChart(labels, [{
+                label: 'Altura de cada árbol (m)',
+                data: values,
+                backgroundColor: '#3f51b5'
+            }]);
+
+            // Mostrar el promedio debajo de la gráfica
+            $('#mensaje-promedio').remove();
+            $('#grafico3').after(`<div id="mensaje-promedio" style="margin-top:10px;font-weight:bold;color:#3f51b5;">Altura promedio: ${promedio.toFixed(2)} m</div>`);
         },
-        error: function () {
-            $('#grafico3').replaceWith('<div style="color: red; font-weight: bold;">Hubo un error al cargar los datos.</div>');
+        error: function (xhr) {
+            let mensaje = 'Hubo un error al cargar los datos.';
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                mensaje = `<b>Error:</b> ${xhr.responseJSON.error}<br><b>Detalle:</b> ${xhr.responseJSON.detalle || ''}`;
+            }
+            $('#grafico3').replaceWith(`<div style="color: red; font-weight: bold;">${mensaje}</div>`);
         }
     });
 
-    function renderChart(altura) {
-        const ctx3 = document.getElementById('grafico3').getContext('2d');
-        new Chart(ctx3, {
+    function renderChart(labels, datasets) {
+        const ctx = document.getElementById('grafico3').getContext('2d');
+        new Chart(ctx, {
             type: 'bar',
-            data: {
-                labels: ['Altura promedio'],
-                datasets: [{
-                    label: 'Altura promedio (m)',
-                    data: [altura],
-                    backgroundColor: ['#3f51b5']
-                }]
-            },
+            data: { labels, datasets },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        display: false
-                    }
+                    legend: { display: true }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            color: '#00086d',
-                            callback: value => value + ' m'
-                        },
-                        grid: { color: '#e8eaf6' }
-                    },
-                    x: {
-                        ticks: { color: '#00086d' },
-                        grid: { color: '#ede7f6' }
+                        title: {
+                            display: true,
+                            text: 'Altura (m)'
+                        }
                     }
                 }
             }
