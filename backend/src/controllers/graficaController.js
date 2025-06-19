@@ -1,186 +1,123 @@
 const pool = require('../config/db.js');
 
-// 1. Árboles por proyecto (agrupado)
+const handleError = (res, err) => {
+  console.error('⚠️ Error SQL:', err);
+
+  let mensaje = 'Ocurrió un error desconocido en la consulta';
+  let codigo = 500;
+
+  if (err.code === 'ER_ACCESS_DENIED_ERROR') {
+    mensaje = 'Acceso denegado a la base de datos (usuario o contraseña incorrectos)';
+  } else if (err.code === 'ER_BAD_DB_ERROR') {
+    mensaje = 'La base de datos no existe';
+  } else if (err.code === 'ER_PARSE_ERROR') {
+    mensaje = 'Error de sintaxis en la consulta SQL';
+  } else if (err.code === 'PROCEDURE_NOT_FOUND') {
+    mensaje = 'El procedimiento almacenado no fue encontrado';
+  } else if (err.code === 'ECONNREFUSED') {
+    mensaje = 'No se pudo conectar al servidor de base de datos';
+  } else if (err.code === 'ER_BAD_FIELD_ERROR') {
+    mensaje = `Campo inválido en la consulta: ${err.sqlMessage}`;
+  } else if (err.code === 'ER_SP_DOES_NOT_EXIST') {
+    mensaje = 'El procedimiento almacenado no existe';
+  }
+
+  res.status(codigo).json({
+    error: mensaje,
+    detalle: err.message,
+    sqlState: err.sqlState,
+    codigoError: err.code,
+    stack: err.stack
+  });
+};
+
+
 exports.arbolesPorProyecto = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_ObtenerArbolesPorProyecto()');
-    // Si tu procedure no agrupa, hazlo aquí:
-    // Suponiendo que rows[0] tiene campos: proyecto_idProyecto
-    const conteo = {};
-    console.log(row[0]);
-    rows[0].forEach(row => {
-      const key = row.proyecto_idProyecto || row.proyecto || row.idProyecto || 'Sin Proyecto';
-      conteo[key] = (conteo[key] || 0) + 1;
-    });
-    const labels = Object.keys(conteo);
-    const values = Object.values(conteo);
-    
-    res.json({ labels, values });
+    const [rows] = await pool.query('CALL sp_ArbolesPorProyecto()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 2. Total de árboles plantados (solo número)
 exports.contarArboles = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_ContarArbolesPorProyecto()');
-    const total = rows[0][0]?.total_arboles || 0;
-    res.json({ total });
+    const [rows] = await pool.query('CALL sp_TotalArbolesPorProyecto()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 3. Altura promedio de árboles
 exports.alturaPromedio = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_CalcularAlturaMediaArboles()');
-    const altura = rows[0][0]?.altura_media || 0;
-    res.json({ altura });
+    const [rows] = await pool.query('CALL sp_AlturasArboles()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 4. Capacidad total de riego
 exports.capacidadTotalRiego = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_SumarCapacidadRiego()');
-    const capacidad = rows[0][0]?.capacidad_total || 0;
-    res.json({ capacidad });
+    const [rows] = await pool.query('CALL sp_SistemasRiego()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 5. Informes por empleado (agrupa por empleado)
 exports.informesEmpleado = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_ObtenerInformesDeEmpleado()');
-    // Suponiendo que rows[0] tiene campo empleado_idEmpleado
-    const conteo = {};
-    rows[0].forEach(row => {
-      const key = row.empleado_idEmpleado || row.empleado || 'Empleado';
-      conteo[key] = (conteo[key] || 0) + 1;
-    });
-    const labels = Object.keys(conteo);
-    const values = Object.values(conteo);
-    res.json({ labels, values });
+    const [rows] = await pool.query('CALL sp_InformesPorEmpleado()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 6. Actividades por empleado (agrupa por empleado)
 exports.actividadesEmpleado = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_ObtenerActividadesDeEmpleado()');
-    // Suponiendo que rows[0] tiene campo empleado_idEmpleado
-    const conteo = {};
-    rows[0].forEach(row => {
-      const key = row.empleado_idEmpleado || row.empleado || 'Empleado';
-      conteo[key] = (conteo[key] || 0) + 1;
-    });
-    const labels = Object.keys(conteo);
-    const values = Object.values(conteo);
-    res.json({ labels, values });
+    const [rows] = await pool.query('CALL sp_ActividadesEmpleados()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 7. Detalles de proyectos (devuelve nombre y algún detalle)
 exports.detallesProyecto = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_ObtenerDetallesProyecto()');
-    // Ejemplo: nombre, ciudad, estado, pais
-    const labels = rows[0].map(row => row.nombre || row.idProyecto || 'Proyecto');
-    const ciudades = rows[0].map(row => row.ciudad || '');
-    const estados = rows[0].map(row => row.estado || '');
-    const paises = rows[0].map(row => row.pais || '');
-    res.json({ labels, ciudades, estados, paises });
+    const [rows] = await pool.query('CALL sp_DetallesProyectos()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 8. Informes por proyecto (agrupa por proyecto)
 exports.informesProyecto = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_ObtenerInformesProyecto()');
-    // Suponiendo que rows[0] tiene campo proyecto_idProyecto
-    const conteo = {};
-    rows[0].forEach(row => {
-      const key = row.proyecto_idProyecto || row.proyecto || 'Proyecto';
-      conteo[key] = (conteo[key] || 0) + 1;
-    });
-    const labels = Object.keys(conteo);
-    const values = Object.values(conteo);
-    res.json({ labels, values });
+    const [rows] = await pool.query('CALL sp_InformesPorProyecto()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 9. Equipos por proyecto (agrupa por proyecto)
 exports.equiposProyecto = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_ObtenerEquiposProyecto()');
-    // Suponiendo que rows[0] tiene campo proyecto_idProyecto
-    const conteo = {};
-    rows[0].forEach(row => {
-      const key = row.proyecto_idProyecto || row.proyecto || 'Proyecto';
-      conteo[key] = (conteo[key] || 0) + 1;
-    });
-    const labels = Object.keys(conteo);
-    const values = Object.values(conteo);
-    res.json({ labels, values });
+    const [rows] = await pool.query('CALL sp_EquiposPorProyecto()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
 
-// 10. Materiales por actividad (agrupa por actividad y material)
 exports.materialesActividad = async (req, res) => {
   try {
-    const [rows] = await pool.query('CALL sp_ObtenerMaterialesPorActividad()');
-    // Suponiendo que rows[0] tiene campos: actividad_idActividad, material (nombre), cantidad
-    // Agrupa por actividad y material
-    const actividades = {};
-    const materialesSet = new Set();
-
-    rows[0].forEach(row => {
-      const act = row.actividad_idActividad || 'Actividad';
-      const mat = row.material || 'Material';
-      const cantidad = row.cantidad || 1;
-      materialesSet.add(mat);
-      if (!actividades[act]) actividades[act] = {};
-      actividades[act][mat] = (actividades[act][mat] || 0) + cantidad;
-    });
-
-    const labels = Object.keys(actividades);
-    const materiales = Array.from(materialesSet);
-
-    // Construir datasets para cada material
-    const datasets = materiales.map((mat, idx) => ({
-      label: mat,
-      data: labels.map(act => actividades[act][mat] || 0),
-      backgroundColor: ['#7986cb', '#9fa8da', '#c5cae9', '#d1c4e9', '#b2dfdb'][idx % 5]
-    }));
-
-    res.json({ labels, datasets });
+    const [rows] = await pool.query('CALL sp_MaterialesPorActividad()');
+    res.json(rows[0]);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error en la consulta' });
+    handleError(res, err);
   }
 };
