@@ -7,7 +7,7 @@ const cors = require('cors');
 const allowedOrigins = [
   'http://localhost:3000',
   'https://proyectoe4servicios.onrender.com',
-  'https://proyectoe4.onrender.com',
+  'https://proyectoe4.onrender.com', 
   'http://127.0.0.1:3001'
 ];
 
