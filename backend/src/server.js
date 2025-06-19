@@ -4,7 +4,12 @@ const app = express();
 const cors = require('cors');
 
 // Define los orígenes permitidos (ajusta según tus necesidades)
-const allowedOrigins = ['http://localhost:3000', 'https:/proyectoe4servicios.onrender.com','https://proyectoe4.onrender.com'];
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://proyectoe4servicios.onrender.com',
+  'https://proyectoe4.onrender.com',
+  'http://127.0.0.1:3001'
+];
 
 app.use(cors({
   origin: allowedOrigins,
