@@ -4,19 +4,25 @@ $(document).ready(function () {
         method: 'GET',
         dataType: 'json',
         success: function (data) {
-            // Mostrar cada árbol por especie
-            const labels = data.map(arbol => arbol.especie);
-            const values = data.map(arbol => Number(arbol.altura)); // O usa otro campo si prefieres
+            // Agrupar y contar árboles por especie
+            const conteo = {};
+            data.forEach(arbol => {
+                const key = arbol.especie || 'Sin Especie';
+                conteo[key] = (conteo[key] || 0) + 1;
+            });
+
+            const labels = Object.keys(conteo);
+            const values = Object.values(conteo);
 
             renderChart(labels, [{
-                label: 'Altura de cada árbol (m)',
+                label: 'Cantidad de árboles por especie',
                 data: values,
                 backgroundColor: '#43a047'
             }]);
 
-            // Mostrar el total de árboles en un mensaje
-            $('#total-arboles').remove(); // Elimina si ya existe
-            $('#grafico2').after(`<div id="total-arboles" style="margin-top:10px;font-weight:bold;color:#2e7d32;">Total de árboles: ${data.length}</div>`);
+            // Mostrar el total de árboles debajo de la gráfica
+            $('#mensaje-total-arboles').remove();
+            $('#grafico2').after(`<div id="mensaje-total-arboles" style="margin-top:10px;font-weight:bold;color:#2e7d32;">Total de árboles: ${data.length}</div>`);
         },
         error: function (xhr) {
             let mensaje = 'Hubo un error al cargar los datos.';
